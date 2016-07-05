@@ -19,7 +19,8 @@
     
     // 数据协议
     
-    {"result":0,
+    {   
+        "result":0,
         "data":{
             "count":47,
             "list":[
