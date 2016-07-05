@@ -35,10 +35,10 @@
     3.支持表格容器高度自适应，列宽自适应
 
 .开放API列表
-    $('#my-cute-grid').cuteGrid('reload')             --重新加载
-    $('#my-cute-grid').cuteGrid('resize')             --重新计算宽度高度并设置
-    $('#my-cute-grid').cuteGrid('select',[args])      --选中
-    $('#my-cute-grid').cuteGrid('deselect',[args])    --反选
-    $('#my-cute-grid').cuteGrid('getSelected')        --返回选中的列的数据
+    1.$('#my-cute-grid').cuteGrid('reload')             --重新加载
+    2.$('#my-cute-grid').cuteGrid('resize')             --重新计算宽度高度并设置
+    3.$('#my-cute-grid').cuteGrid('select',[args])      --选中
+    4.$('#my-cute-grid').cuteGrid('deselect',[args])    --反选
+    5.$('#my-cute-grid').cuteGrid('getSelected')        --返回选中的列的数据
     
 
