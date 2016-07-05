@@ -18,6 +18,7 @@
     
     
     // 数据协议
+    
     {"result":0,
         "data":{
             "count":47,
@@ -30,11 +31,13 @@
     }
 
 .特性列表
+
     1.支持表头固定，表格体纵向滚动
     2.支持前N列固定，表格体横向滚动
     3.支持表格容器高度自适应，列宽自适应
 
 .开放API列表
+
     1.$('#my-cute-grid').cuteGrid('reload')             --重新加载
     2.$('#my-cute-grid').cuteGrid('resize')             --重新计算宽度高度并设置
     3.$('#my-cute-grid').cuteGrid('select',[args])      --选中
