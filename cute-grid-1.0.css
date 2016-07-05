@@ -1,0 +1,254 @@
+@CHARSET "UTF-8";
+
+.cute-grid {
+	font-size: 12px;
+}
+
+.cute-grid-main {
+	position: relative;
+	overflow: hidden;
+	border: solid 1px #d8e3ef;
+	box-sizing: content-box;
+}
+
+.cute-grid-main .cute-grid-t-inner {
+	position: relative;
+	overflow: hidden;
+}
+
+.cute-grid-main .cute-grid-main-mask {
+	position: absolute;
+	overflow: hidden;
+    text-align: center;
+    line-height: 60px;
+    font-size: 40px;
+    background:url(./images/loading.gif) center center no-repeat;
+	box-sizing: content-box;
+}
+
+/* thead */
+.cute-grid-thead {
+	overflow: hidden;
+	border-bottom: 1px solid #d8e3ef;
+	/*font-weight: bold;*/
+}
+
+.cute-grid-thead .cute-grid-row {
+	height: 52px;
+	box-sizing: border-box;
+}
+
+.cute-grid-thead .cute-grid-row .cute-grid-cell {
+	height: 100%;
+	line-height: 52px;
+	font-size: 14px;
+	position: absolute;
+	border-right: 1px solid #d8e3ef;
+	box-sizing: border-box;
+	background: #fafdff;
+}
+
+.cute-grid-thead .cute-grid-row .cute-grid-cell .cute-grid-cell-inner {
+	height: 100%;
+	width: 100%;
+	position: relative;
+}
+
+.cute-grid-thead .cute-grid-row .cute-grid-cell .cute-grid-sorttype {
+	width: 7px;
+	height: 10px;
+	position: absolute;
+	top: 20px;
+	right: 10px;
+	background-image: url(./images/sort.png);
+	background-position: 0 0;
+}
+
+.cute-grid-thead .cute-grid-row .cute-grid-cell .cute-grid-sorttype-up {
+	background-position: -7px 0;
+}
+
+.cute-grid-thead .cute-grid-row .cute-grid-cell .cute-grid-sorttype-down
+	{
+	background-position: -14px 0;
+}
+
+/* tbody */
+.cute-grid-tbody .cute-grid-row {
+	height: 40px;
+	line-height: 100%;
+	box-sizing: border-box;
+	/*border-top: solid 1px white;*/
+}
+
+.cute-grid-tbody .cute-grid-row .cute-grid-cell {
+	height: 100%;
+	line-height: 40px;
+	font-size: 12px;
+    box-sizing: border-box;
+}
+
+.cute-grid-tbody {
+	width: 100%;
+	overflow: hidden;
+}
+
+.cute-grid-tbody .cute-grid-row:nth-child(even) .cute-grid-cell {
+	background-color: #f7f8fa;
+}
+
+.cute-grid-tbody .cute-grid-row:nth-child(odd) .cute-grid-cell {
+	background-color: #fff;
+}
+
+.cute-grid-tbody .cute-grid-row:hover .cute-grid-cell {
+	background-color: #eeeef3;
+}
+
+.cute-grid-tbody .cute-grid-row.cute-grid-row-selected .cute-grid-cell {
+	background-color: #fff6e5;
+}
+
+.cute-grid-row {
+	position: relative;
+	height: 40px;
+}
+
+.cute-grid-cell {
+	position: absolute;
+	padding-left: 10px;
+}
+
+.cute-grid-cell .cute-grid-pa { /*每一行中若显示不完本行内容则用省略号代替*/
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+}
+
+.cute-grid-cell a {
+	color: #0071BA;
+	border-bottom: 1px solid transparent;
+}
+
+.cute-grid-cell a:hover {
+	border-bottom-color: #0071BA;
+}
+
+.cute-grid-tbody .cute-grid-row .cute-grid-cell-fixed-last {
+	border-right: 1px solid #d8e3ef;
+}
+
+/* scrollbar */
+.cute-grid-h-scrollbar-con {
+	height: 8px;
+	background-color: #efefef;
+	position: absolute;
+	z-index: 800;
+}
+
+.cute-grid-v-scrollbar-con {
+	width: 8px;
+	background-color: #efefef;
+	position: absolute;
+	z-index: 800;
+}
+
+.cute-grid-h-scrollbar-bar {
+	border-radius: 10px;
+	height: 8px;
+	background-color: #adbdcc;
+	position: absolute;
+}
+
+.cute-grid-h-scrollbar-bar:hover {
+	background-color: #6b8299;
+}
+
+.cute-grid-v-scrollbar-bar {
+	border-radius: 10px;
+	width: 8px;
+	background-color: #adbdcc;
+	position: absolute;
+}
+
+.cute-grid-v-scrollbar-bar:hover {
+	background-color: #6b8299;
+}
+
+.cute-grid-scrollbar-bar-dragging {
+	background-color: #6b8299;
+}
+
+/* 分页 */
+.cute-grid-pagerbar {
+	height: 26px;
+	padding: 10px;
+	line-height: 24px;
+}
+
+.cute-grid-pagerbar>div {
+	float: right;
+}
+
+.cute-grid-pagerbar-pages a {
+	height: 24px;
+	width: 24px;
+	text-align: center;
+	color: #3d5266;
+	text-decoration: none;
+	display: inline-block;
+	border: 1px solid #a3b8cc;
+	border-radius: 5px;
+	margin: 0 2px;
+}
+
+.cute-grid-pagerbar-pages a:hover {
+	background-color: #a3b8cc;
+	color: white;
+}
+
+.cute-grid-pagerbar-pages a.page-selected {
+	background-color: #a3b8cc;
+	color: white;
+}
+
+.cute-grid-pagerbar-prev, .cute-grid-pagerbar-next {
+	margin: 0 5px;
+	height: 24px;
+	width: 30px;
+	text-align: center;
+	display: inline-block;
+	border: 1px solid #a3b8cc;
+	cursor: pointer;
+	border-radius: 5px;
+}
+
+.cute-grid-pagerbar-prev:hover, .cute-grid-pagerbar-next:hover {
+	background-color: #a3b8cc;
+	color: white;
+}
+
+.cute-grid-pagerbar-total {
+	padding-left: 5px;
+}
+
+.cute-grid-pagerbar-total span {
+	font-weight: bold;
+}
+
+.cute-grid .cp {
+	cursor: pointer;
+}
+
+.cute-grid .pa {
+	position: absolute;
+}
+
+.cute-grid .unselectable {
+	-webkit-touch-callout: none;
+	-webkit-user-select: none;
+	-khtml-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+}

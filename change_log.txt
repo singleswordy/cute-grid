@@ -1,0 +1,9 @@
+CuteGid change log
+v1.0.0     2016.7.4  
+    1.通用表格功能，静态及动态数据加载（ajax），加载时loading
+    2.按列排序，分页
+    3.表头固定，表格体纵向滚动
+    4.前N列固定，其他列横向滚动
+    5.支持表格宽度高度自适应，支持表格列宽度自适应
+    6.多事件支持：onBeforeLoad,onLoad,onLoadError,onSelect,onUnselect,onBeforSelect,onBeforeUnSelect
+    7.支持以下api: reload;resize;select;deselect;getSelected;
