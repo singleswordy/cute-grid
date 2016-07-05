@@ -6,7 +6,7 @@
 .使用方式
 
     // 初始化
-    $('#my-grid').cuteGrid({
+    $('#my-cute-grid').cuteGrid({
         'url' : '{path to get json data}',
         'cols' : [
             {index:'{col.key1}',display:'{列显示名称}',width:'{列宽度}'},
@@ -35,7 +35,10 @@
     3.支持表格容器高度自适应，列宽自适应
 
 .开放API列表
-    $('#myCuteGrid').cuteGrid('reload')
-    $('#myCuteGrid').cuteGrid('reload')
-    $('#myCuteGrid').cuteGrid('reload')
-    $('#myCuteGrid').cuteGrid('reload')
+    $('#my-cute-grid').cuteGrid('reload')             --重新加载
+    $('#my-cute-grid').cuteGrid('resize')             --重新计算宽度高度并设置
+    $('#my-cute-grid').cuteGrid('select',[args])      --选中
+    $('#my-cute-grid').cuteGrid('deselect',[args])    --反选
+    $('#my-cute-grid').cuteGrid('getSelected')        --返回选中的列的数据
+    
+
