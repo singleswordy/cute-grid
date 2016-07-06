@@ -32,7 +32,7 @@
  *
  */
 
-;(function(X,$,template){
+;(function($,template,window,undefined){
 
     var CuteGrid = function(options , args){
         var that = this,
@@ -133,14 +133,13 @@
 
             // 先渲染遮罩，render渲染后自动解除
             that._mask();
-
+            that._log(opts.data);
+            
             if( data){
-                if( useProxy && $.isFunction(opts.dataProxy)){
-                  data = opts.dataProxy(data);
-                }
                 that._render(data);
             // 静态的    
             } else if( opts.data && $.isArray(opts.data) && opts.data.length > 0) {
+                that._log('dddd');
                 opts.dataRows = opts.data;
                 opts.dataCount = opts.data.length;
 
@@ -160,26 +159,37 @@
                     opts.params.rows = opts.pageSizeList[0];
                 };
 
-                //加载
-                that.ajax = X.ajax({
+                // 发起ajax请求
+                that.ajax = $.ajax({
                     url: opts.url,
                     type: opts.type,
                     dataType: 'json',
                     data: opts.params,
-                    beforeSend: function(){
-                        
+                    beforeSend:function(XMLHttpRequest){
+                        opts.onBeforeLoad && $.isFunction(opts.onBeforeLoad) && opts.onBeforeLoad.call(that,XMLHttpRequest);
                     },
-                    retOk:function(msg , data){
-                        // 暂存返回对数据
-                        opts.rawData = data;
-                        opts.dataRows = data.list;
-                        opts.dataCount = data.count || data.list.length;
-                        // 如果有dataProxy，强制使用
-                        that.load(data,true);
+                    success:function(response){
+                        // 支持数据源代理(在接口协议不一致的情况下有用)
+                        if( useProxy && $.isFunction(opts.dataProxy)){
+                            response = opts.dataProxy(response);
+                        } 
+                        // 读取数据
+                        if (response && response.result === 0) {
+                            opts.rawData = response.data;
+                            opts.dataRows = response.data.list;
+                            opts.dataCount = response.data.count || response.data.list.length;
+                            // load
+                            that.load(response.data,true);
+                        } else {
+                            opts.runtime.errorText = response ? '加载数据错误：' + response.message + '(' + response.result +')' : '数据格式错误';
+                            that._render(null);　
+                        }
                     },
-                    //出错处理 
-                    retError:function(msg, data, code){
-                        opts.runtime.errorText = '加载数据错误：' + msg + '(' + code +')';
+                    error:function(response){
+                        if( response.status === 0){ // ajax.abort 主动终止
+                            return;
+                        } 
+                        opts.runtime.errorText =  'ajax请求错误：' + response.responseText || '未知错误';
                         that._render(null);
                     }
                 });
@@ -339,7 +349,7 @@
             };
             // 渲染
             var contentWidth = $content.width();
-            var scrollbarSize = X.getScrollbarSize();
+            var scrollbarSize = _getScrollbarSize();
             var renderTemplate = template.compile(that.tmpl);
             $content.addClass('cute-grid').html(renderTemplate(templateData));
 
@@ -690,14 +700,27 @@
 
     // 跟踪日志
     var _consoleLog = function(message,level){
-        (X && X.log || function(message,level){
-            message = message || '[empty] Just a log at ' + new Date().toLocaleString();
-            level = level || 'debug';
-            message = '[' + level + ']' + message;
-            if(typeof console != undefined && typeof console[level] == 'function') {
+        message = message || '[empty] Just a log at ' + new Date().toLocaleString();
+        level = level || 'debug';
+        if(typeof console != undefined && typeof console[level] == 'function') {
+            if ( typeof message === 'object') {
+                console[level]( '[' + level + '][object]:');
                 console[level](message);
-            };
-        })(message,level);
+            } else {
+                message = '[' + level + ']' + message;
+                console[level](message);
+            }
+        };
+    }
+
+    var _getScrollbarSize = function(){
+        if (CuteGrid._scrollbarSize) { return CuteGrid._scrollbarSize};
+        var scrollDiv = document.createElement("div");
+        scrollDiv.style.overflow = 'scroll';
+        document.body.appendChild(scrollDiv);
+        var scrollbarSize = scrollDiv.offsetWidth - scrollDiv.clientWidth;
+        document.body.removeChild(scrollDiv);
+        return CuteGrid._scrollbarSize = scrollbarSize;
     }
 
     // 可用的参数及默认值设置
@@ -874,10 +897,7 @@
     CuteGrid.fn.init.prototype = CuteGrid.fn;
     $.fn.cuteGrid = CuteGrid;
 
-})(MTFL,jQuery,template);
-
-
-
+})(jQuery,template,window,undefined);
 
 
 

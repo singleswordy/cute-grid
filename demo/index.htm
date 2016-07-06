@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test for cute-grid</title>
+    <!-- CSS link -->
+    <link rel="stylesheet" href="../cute-grid-1.0.css">
+    <!-- js link -->
+    <script src="../lib/jquery-2.2.3.min.js"></script>
+    <script src="../lib/template.js"></script>
+    <script src="../cute-grid-1.0.js"></script>
+
+    <script type="text/javascript">
+
+        $().ready(function(){
+
+            // 页面用于存储ajax请求参数大变量
+            var params = {
+                'aaa':1
+            };
+
+            // demo static data
+            var gridData = [
+                {'name':'西门吹雪','age':18,'sex':'男','birthday':'8月1日','phone':'13500000000','email':'x-crm@motouch.cn'},
+                {'name':'公孙大娘','age':28,'sex':'女','birthday':'8月1日','phone':'13500000000','email':'x-crm@motouch.cn'},
+                {'name':'李寻欢','age':38,'sex':'女','birthday':'8月1日','phone':'13500000000','email':'x-crm@motouch.cn'},
+                {'name':'楚留香','age':27,'sex':'未知','birthday':'8月1日','phone':'13500000000','email':'x-crm@motouch.cn'},
+                {'name':'陆小凤','age':39,'sex':'女','birthday':'8月1日','phone':'13500000000','email':'x-crm@motouch.cn'},
+                {'name':'叶开','age':41,'sex':'未知','birthday':'8月1日','phone':'13500000000','email':'x-crm@motouch.cn'},
+                {'name':'傅红雪','age':66,'sex':'女','birthday':'8月1日','phone':'13500000000','email':'x-crm@motouch.cn'},
+                {'name':'萧别离','age':50,'sex':'男','birthday':'8月1日','phone':'13500000000','email':'x-crm@motouch.cn'},
+            ];
+
+            // 表格初始化
+            $('#my-grid').cuteGrid({
+                height: 'auto',
+                //url:'/demo/data.php',    // 取消此行注释则使用动态数据
+                data:gridData,              // 使用静态数据           
+                params:params,
+                debug:true,
+                cols:[
+                    {index:'name',display:'姓名',width:190,renderer:function(v,r){
+                        return '<span style="color:red;">' + v + '</span>';},isFixed:true},
+                    {index:'age',display:'年龄',width:140,sortable:true,isFixed:true},
+                    {index:'sex',display:'性别',width:140},
+                    {index:'birthday',display:'生日',width:140},
+                    {index:'email',display:'邮箱',width:80},
+                    {index:'phone',display:'电话',width:0}
+                ],
+                onLoad:function(){
+                    console.log('load finished!');
+                },
+                onBeforeSelect:function(){
+                    console.log('excute onbeforeselect...');
+                },
+                onSelect:function(){
+                    console.log('excute onselect...');
+                    console.log('you have selected ' + $('#my-grid').cuteGrid('getSelected').length + ' rows!');
+                    console.log($('#my-grid').cuteGrid('getSelected').get(0).name);
+                }
+            });
+
+            // reload
+            $('#reload').on('click',function(){
+                params.aaa = 2;
+                $('#my-grid').cuteGrid('reload');
+            });
+        });
+
+
+
+    </script>
+</head>
+<body>
+<div id="container" style="width:100%;overflow:hidden;">
+    <div id="left-con" style="float:left;width:160px;padding:20px;">
+        <h3>使用说明：</h3>
+        <p>1.点击 <button id="reload">reload</button>，以当前参数重新加载表格。</p>
+    </div>
+    <div id="right-con" style="margin-left:200px;padding:10px;">
+
+        <!-- 容器，宽度及高度初始化时固定 -->
+        <div id="my-grid" class="cute-grid cute-grid-con" ></div> <!-- end of #my-grid -->
+
+    </div>
+</div>
+</body>
+</html>
