@@ -4,7 +4,7 @@
  * @version 1.0.0
  * 
  * @author  LIBO
- * @date	2016年5月27日上午11:32:04
+ * @date    2016年5月27日上午11:32:04
  * @depends jQuery1.9+, artTemplate2.0
  * @description
  *          v1.0.0      1.通用表格功能，静态及动态数据加载（ajax），加载时loading
@@ -28,6 +28,7 @@
  *
  *          unfixed bug list:
  *                      1.暂不支持列内容较多，超过列宽时的浮动显示或者换行，所以列内容太多时会有被截断的现象。
+ *                      2.单页面多实例时支持有问题
  *
  *
  */
@@ -134,7 +135,7 @@
             // 先渲染遮罩，render渲染后自动解除
             that._mask();
             that._log(opts.data);
-            
+
             if( data){
                 that._render(data);
             // 静态的    
@@ -394,9 +395,11 @@
             // grid-main容器的高度（不含进度条，进度条占用的高度算在padding-bottom中）
             opts.runtime.container.height = opts.height || 0; 
             opts.runtime.container.minHeight = 0;
+            var marginTop = parseInt($content.css('margin-top'));
+            var marginBottom = parseInt($content.css('margin-bottom'));
             // 高度
             if ( opts.height == 'auto' ) {
-                opts.runtime.container.height = $(window).height() - $content.offset().top - 76;
+                opts.runtime.container.height = $(window).height() - $content.offset().top - 76 - marginTop - marginBottom;
             } else if( parseInt(opts.height) > 0 ) {
                 opts.runtime.container.height = opts.height;
             } else {
@@ -770,7 +773,7 @@
     // 表格渲染模版 
     CuteGrid.fn.tmpl = [
         '<!-- 表格头和表格主体的包裹容器，以初始化时宽度为准，当高度或宽度超过父容器时，父容器出现滚动条 -->',
-        '<div class="cute-grid-main " style="height:{{runtime.container.height?runtime.container.height:""}}px;min-height:{{runtime.container.minHeight?runtime.container.minHeight:""}}px;{{runtime.hSb.show?"padding-bottom:" + runtime.container.paddingBottom + "px;":""}}">',
+        '<div class="cute-grid-main " style="height:{{runtime.container.height?runtime.container.height:""}}px;min-height:{{runtime.container.minHeight?runtime.container.minHeight:""}}px;{{runtime.hSb.show?"padding-bottom:" + runtime.container.paddingBottom + "px;":""}};{{runtime.vSb.show?"padding-right:" + runtime.container.paddingRight + "px;":""}}">',
 
             '<!-- 表头行－thead（固定在顶部） -->',
             '<div class="cute-grid-thead" >',

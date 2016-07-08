@@ -2,6 +2,7 @@
 
 .cute-grid {
 	font-size: 12px;
+	box-sizing: content-box;
 }
 
 .cute-grid-main {
