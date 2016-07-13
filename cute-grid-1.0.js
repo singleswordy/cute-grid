@@ -35,6 +35,9 @@
 
 ;(function($,template,window,undefined){
 
+    // 是否支持localstorage
+    var enableLocalStorage = window.localStorage ? true : false;
+
     var CuteGrid = function(options , args){
         var that = this,
             gridInstance; // grid 实例
@@ -72,6 +75,17 @@
 
     CuteGrid.fn = CuteGrid.prototype = {
         constructor : CuteGrid,// 构造器
+
+        // localstorage 的 key
+        _getUniqueKey : function(){
+            if (!this.options || !this.options.content) { return false};
+            var uk = this.options.content.attr('class').replace(/\s/g,'') || this.options.content.attr('id');
+            if ( !uk ) { 
+                return false;
+            } else {
+                return  'cutegrid-uniquekey-' + uk.toLowerCase();
+            }
+        },
 
         /**
          * 初始化方法
@@ -134,7 +148,6 @@
 
             // 先渲染遮罩，render渲染后自动解除
             that._mask();
-            that._log(opts.data);
 
             if( data){
                 that._render(data);
@@ -151,14 +164,15 @@
                 that._render({'list':opts.dataRows,'count':opts.dataCount});
             // ajax的
             } else if( opts.url){
-                //如果存在活动的ajax对象则终止
-                // that.ajax && that.ajax.status !== 200 && that.ajax.abort();
 
                 // 解决没有传分页参数的问题
-                if ( !opts.params.page || !opts.params.rows ) {
-                    opts.params.page = 1;
-                    opts.params.rows = opts.pageSizeList[0];
-                };
+                opts.params.page = opts.params.page || 1;
+                opts.params.rows = opts.params.rows || (function(){
+                    // 分页大小从本地缓存中取
+                    var uniqueKey = that._getUniqueKey();
+                    var localCachedRows = enableLocalStorage && uniqueKey && window.localStorage.getItem( uniqueKey + '-pagerows');
+                    return localCachedRows || opts.pageSizeList[0];
+                })();
 
                 // 发起ajax请求
                 that.ajax = $.ajax({
@@ -603,17 +617,21 @@
             });
             // 前一页
             $('.cute-grid-pagerbar-prev').on('click',function(){
-                opts.params.page = opts.params.page - 1 || 1;
+                opts.params.page = parseInt(opts.params.page) - 1 || 1;
                 that.reload();
             });
             // 下一页
             $('.cute-grid-pagerbar-next').on('click',function(){
-                opts.params.page = opts.params.page + 1 > opts.pager.pageTotal ? opts.params.page : opts.params.page + 1;
+                opts.params.page = parseInt(opts.params.page) + 1 > opts.pager.pageTotal ? opts.params.page : parseInt(opts.params.page) + 1;
                 that.reload();
             });
+            // 切换分页大小
             $('.cute-grid-pagesize-select').on('change',function(){
                 opts.params.rows = $(this).val();
                 opts.params.page = 1;
+                // 把分页数存入本地存储
+                var uniqueKey = that._getUniqueKey();
+                enableLocalStorage && uniqueKey && window.localStorage.setItem(uniqueKey + '-pagerows', opts.params.rows);
                 that.reload();
             });
 
