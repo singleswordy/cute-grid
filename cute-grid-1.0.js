@@ -288,10 +288,19 @@
                 rowsTotal : opts.dataCount || 0,
                 pageTotal : Math.ceil(opts.dataCount / opts.params.rows ) || 0
             };
+            // 计算起始页数
+            var startPageNum = 0;
+            if ( opts.pager.pageNo > opts.pager.pageTotal - 10) {
+                startPageNum = opts.pager.pageTotal - 10;
+            } else if ( opts.pager.pageTotal >= 10) {
+                startPageNum = opts.pager.pageNo - (opts.pager.pageNo % 10 || 10);
+            }
+
             // 最多显示10个页码
             for (var i = 1; i <= opts.pager.pageTotal && i <= 10 ; i++) {
-                opts.pager.pageNumList.push(i);
+                opts.pager.pageNumList.push(startPageNum + i);
             };
+
         },
 
         // 排序
