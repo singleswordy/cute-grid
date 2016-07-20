@@ -7,6 +7,7 @@
     <!-- js link -->
     <script src="../lib/jquery-2.2.3.min.js"></script>
     <script src="../lib/template.js"></script>
+    <script src="../lib/jquery.mousewheel.min.js"></script>
     <script src="../cute-grid-1.0.js"></script>
 
     <script type="text/javascript">
@@ -33,8 +34,8 @@
             // 表格初始化
             $('#my-grid').cuteGrid({
                 height: 'auto',
-                //url:'/demo/data.php',    // 取消此行注释则使用动态数据
-                data:gridData,              // 使用静态数据           
+                url:'/demo/data.php',    // 取消此行注释则使用动态数据
+                // data:gridData,              // 使用静态数据           
                 params:params,
                 debug:true,
                 cols:[
