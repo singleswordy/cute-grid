@@ -290,12 +290,13 @@
             };
             // 计算起始页数
             var startPageNum = 0;
-            if ( opts.pager.pageNo > opts.pager.pageTotal - 10) {
+            if ( opts.pager.pageTotal <= 10 ) {
+                startPageNum = 0;
+            } else if ( opts.pager.pageNo > opts.pager.pageTotal - 10) {
                 startPageNum = opts.pager.pageTotal - 10;
-            } else if ( opts.pager.pageTotal >= 10) {
+            } else {
                 startPageNum = opts.pager.pageNo - (opts.pager.pageNo % 10 || 10);
             }
-
             // 最多显示10个页码
             for (var i = 1; i <= opts.pager.pageTotal && i <= 10 ; i++) {
                 opts.pager.pageNumList.push(startPageNum + i);
@@ -670,12 +671,82 @@
                 $('.cute-grid-main').addClass('unselectable');
             },function( offsetX,offsetY ){
                 offsetY = offsetY || 0;
-                // 向左移动 offsetX
+                // 向上移动 offsetX
                 $('.cute-grid-tbody .cute-grid-t-inner').css({"top": (offsetY/opts.runtime.vSb.scrollRate)*-1+ 'px'});
             },function(){
                 $('.cute-grid-v-scrollbar-bar').removeClass('cute-grid-scrollbar-bar-dragging');//松开鼠标后恢复样式
                 $('.cute-grid-main').removeClass('unselectable'); 
             });
+
+            // 如果支持鼠标滚动事件（需要加载）
+            if ($.event.special.mousewheel) {
+
+                $('.cute-grid-main').mousewheel(function(event, delta) {
+                    // 鼠标滚动优先支持纵向滚动
+                    if ( opts.runtime.vSb.show ) {
+                        mouseWheelScroll( delta, 'vertical');
+                    } else if( opts.runtime.hSb.show ) {
+                        mouseWheelScroll( delta, 'horizontal');
+                    }
+                });
+                
+            };
+
+            /***  
+             *
+             * 鼠标滚轮滚动事件处理逻辑
+             * 
+             * @params delta                 
+             * @params direction            "horizontal" or "vertical",
+             * 
+             */
+            function mouseWheelScroll(delta,direction){
+                if ( direction == 'vertical' && opts.runtime.vSb.show ) {
+                    var vSbPositionTop = parseFloat($('.cute-grid-v-scrollbar-bar').css('top'));
+                    var innerPositionTop = parseFloat($('.cute-grid-tbody .cute-grid-t-inner').css('top')); 
+                    var finalPositionTop = vSbPositionTop - delta ;
+
+                    // 约束滚动距离的上下限
+                    if (finalPositionTop < 0) {
+                        finalPositionTop = 0;
+                    } else if(finalPositionTop >= parseFloat(opts.runtime.vSb.scrollMaxHeight)) {
+                        finalPositionTop = opts.runtime.vSb.scrollMaxHeight;
+                    }
+
+                    // 滚动条的位移量
+                    var scrollSize = finalPositionTop - vSbPositionTop;
+                    // 主体对象的位移量
+                    var innerScrollSize = scrollSize / opts.runtime.vSb.scrollRate;
+
+                    // 渲染
+                    $('.cute-grid-v-scrollbar-bar').css('top',finalPositionTop);
+                    $('.cute-grid-tbody .cute-grid-t-inner').css('top',innerPositionTop - innerScrollSize);
+
+                } else if( direction == 'horizontal' && opts.runtime.hSb.show ){
+                    var hSbPositionLeft = parseFloat($('.cute-grid-h-scrollbar-bar').css('left'));
+                    var innerPositionLeft = parseFloat($('.cute-grid-t-inner').css('left'));
+                    var cellFixedMarginLeft = parseFloat($('.cute-grid-main .cute-grid-cell-fixed').css('margin-left'));
+                    var finalPositionLeft = hSbPositionLeft - delta;
+
+                    // 约束滚动距离的上下限
+                    if (finalPositionLeft < 0) {
+                        finalPositionLeft = 0;
+                    } else if(finalPositionLeft >= parseFloat(opts.runtime.hSb.scrollMaxWidth)) {
+                        finalPositionLeft = opts.runtime.hSb.scrollMaxWidth;
+                    }
+
+                    // 滚动条的位移量
+                    var scrollSize = finalPositionLeft - hSbPositionLeft;
+                    // 主体对象的位移量
+                    var innerScrollSize = scrollSize / opts.runtime.hSb.scrollRate;
+
+                    // 渲染
+                    $('.cute-grid-h-scrollbar-bar').css('left',finalPositionLeft);
+                    $('.cute-grid-t-inner').css('left',innerPositionLeft - innerScrollSize);
+                    $('.cute-grid-main .cute-grid-cell-fixed').css('margin-left', cellFixedMarginLeft + innerScrollSize );
+                }
+            }
+
 
             /*** 
              * 绑定拖拽事件
@@ -700,12 +771,12 @@
                 $(document).mousemove(function(e){  
                     if(_move){ 
                         if ( direction == 'horizontal') {
-                            var x = e.pageX - _x; // 移动时根据鼠标位置计算向右便宜量
+                            var x = e.pageX - _x; // 移动时根据鼠标位置计算向右偏移量
                             if (x < 0) { x = 0};
                             if (x > offsetMax) { x = offsetMax;}
                             $dragObj.css({'left':x + 'px'}); // 拖动对象新位置  
                         } else if( direction == 'vertical' ) {
-                            var y = e.pageY - _y; // 移动时根据鼠标位置计算向右便宜量
+                            var y = e.pageY - _y; // 移动时根据鼠标位置计算向右偏移量
                             if (y < 0) { y = 0};
                             if (y > offsetMax) { y = offsetMax;}
                             $dragObj.css({'top':y + 'px'}); // 拖动对象新位置 
